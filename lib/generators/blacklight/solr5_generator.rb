@@ -9,13 +9,15 @@ module Blacklight
     EOF
 
     def install_solrwrapper
-      gem 'solr_wrapper', '>= 0.3'
+      gem_group :development, :test do
+        gem 'solr_wrapper', '>= 0.3'
+      end
 
       append_to_file "Rakefile", "\nrequire 'solr_wrapper/rake_task'\n"
     end
 
     def add_rsolr_gem
-      gem 'rsolr', '~> 1.0.6'
+      gem 'rsolr', '~> 1.0'
     end
   end
 end

@@ -10,6 +10,7 @@ module Blacklight
   autoload :Exceptions,  'blacklight/exceptions'
   autoload :Parameters,  'blacklight/parameters'
   autoload :Routes,      'blacklight/routes'
+  autoload :RuntimeRegistry, 'blacklight/runtime_registry'
   autoload :SearchBuilder, 'blacklight/search_builder'
   autoload :SearchState, 'blacklight/search_state'
   autoload :Solr, 'blacklight/solr'
@@ -26,7 +27,11 @@ module Blacklight
   ##
   # The default index connection for the search index
   def self.default_index
-    @default_index ||= repository_class.new(default_configuration)
+    Blacklight::RuntimeRegistry.connection ||= repository_class.new(default_configuration)
+  end
+
+  def self.default_index=(repository)
+    Blacklight::RuntimeRegistry.connection = repository
   end
 
   ##
@@ -52,10 +57,14 @@ module Blacklight
   end
 
   def self.connection_config
-    @connection_config ||= begin
-        raise "The #{::Rails.env} environment settings were not found in the blacklight.yml config" unless blacklight_yml[::Rails.env]
-        blacklight_yml[::Rails.env].symbolize_keys
-      end
+    Blacklight::RuntimeRegistry.connection_config ||= begin
+      raise "The #{::Rails.env} environment settings were not found in the blacklight.yml config" unless blacklight_yml[::Rails.env]
+      blacklight_yml[::Rails.env].symbolize_keys
+    end
+  end
+
+  def self.connection_config=(value)
+    Blacklight::RuntimeRegistry.connection_config = value
   end
 
   def self.blacklight_yml
@@ -63,7 +72,7 @@ module Blacklight
     require 'yaml'
 
     return @blacklight_yml if @blacklight_yml
-    unless File.exists?(blacklight_config_file)
+    unless File.exist?(blacklight_config_file)
       raise "You are missing a configuration file: #{blacklight_config_file}. Have you run \"rails generate blacklight:install\"?"
     end
 
@@ -74,7 +83,7 @@ module Blacklight
     end
 
     begin
-      @blacklight_yml = YAML::load(blacklight_erb)
+      @blacklight_yml = YAML.load(blacklight_erb)
     rescue => e
       raise("#{blacklight_config_file} was found, but could not be parsed.\n#{e.inspect}")
     end

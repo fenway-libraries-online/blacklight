@@ -11,7 +11,10 @@ Gem::Specification.new do |s|
   s.email       = ["blacklight-development@googlegroups.com"]
   s.homepage    = "http://projectblacklight.org/"
   s.summary     = "Blacklight provides a discovery interface for any Solr (http://lucene.apache.org/solr) index."
-  s.description = %{Blacklight is an open source Solr user interface discovery platform. You can use Blacklight to enable searching and browsing of your collections. Blacklight uses the Apache Solr search engine to search full text and/or metadata.}
+  s.description = %(Blacklight is an open source Solr user interface discovery platform.
+    You can use Blacklight to enable searching and browsing of your
+    collections. Blacklight uses the Apache Solr search engine to search
+    full text and/or metadata.)
   s.license     = "Apache 2.0"
 
   s.files         = `git ls-files -z`.split("\x0")
@@ -22,11 +25,11 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '~> 2.1'
 
-  s.add_dependency "rails",     ">= 4.1", "< 5"
+  s.add_dependency "rails", ">= 4.2", "< 6"
   s.add_dependency "globalid"
   s.add_dependency "nokogiri",  "~>1.6"     # XML Parser
   s.add_dependency "kaminari", ">= 0.15" # the pagination (page 1,2,3, etc..) of our search results
-  s.add_dependency "rsolr",     "~> 1.0.11"  # Library for interacting with rSolr.
+  s.add_dependency "rsolr",     "~> 1.0", ">= 1.0.6"  # Library for interacting with rSolr.
   s.add_dependency "bootstrap-sass", "~> 3.2"
   s.add_dependency "deprecation"
   s.add_dependency "twitter-typeahead-rails", '~> 0.11'
@@ -35,7 +38,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "~> 3.0"
   s.add_development_dependency "rspec-its"
   s.add_development_dependency "rspec-collection_matchers", ">= 1.0"
-  s.add_development_dependency "capybara"
+  s.add_development_dependency "capybara", '~> 2.6.0'
   s.add_development_dependency "poltergeist"
   s.add_development_dependency 'engine_cart', '~> 0.8.0'
   s.add_development_dependency "equivalent-xml"
