@@ -1,0 +1,61 @@
+<%# default partial to display solr document fields in catalog show view -%>
+<dl class="dl-horizontal dl-invert">
+<!-- This is a bib -->
+<%
+library_holdings = [] 
+online_holdings = []
+document_show_fields(document).each do |field_name, field|
+  if should_render_show_field? document, field
+    if field_name == "lib"
+        library_holdings = document["lib"]
+    elsif field_name == "onl"
+        online_holdings = document["onl"]
+    else
+-%>
+      <dt class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_label document, field: field_name %></dt>
+      <dd class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_value document, field: field_name %></dd>
+<%
+    end
+  end
+end
+%>
+      <dt class="blacklight-opac">Voyager:</dt>
+      <dd class="blacklight-opac"><a href="http://endeavor.flo.org/vwebv/holdingsInfo?bibId=<%= document["id"][1..-1]%>"><%= document["id"][1..-1]%></a></dd>
+</dl>
+<hr/>
+<dl class="dl-horizontal dl-invert">
+<%
+onl_label = render_document_show_field_label(document, field: "onl")
+if online_holdings.empty?
+%>
+        <dt class="blacklight-onl"><%= onl_label %></dt>
+        <dd class="blacklight-onl"><i>No online access</i></dd>
+<%
+else
+  label = onl_label
+  online_holdings.each do |v|
+%>
+        <dt class="blacklight-onl"><%= label %></dt>
+        <dd class="blacklight-onl"><%= render partial: 'show_online_holdings', locals: { value: v } %></dd>
+<%
+    label = ""
+  end
+end
+lib_label = render_document_show_field_label(document, field: "lib")
+if library_holdings.empty?
+%>
+        <dt class="blacklight-lib"><%= lib_label %></dt>
+        <dd class="blacklight-lib"><i>None available</i></dd>
+<%
+else
+  label = lib_label
+  library_holdings.each do |v|
+%>
+        <dt class="blacklight-lib"><%= label %></dt>
+        <dd class="blacklight-lib"><%= render partial: 'show_library_holdings', locals: { value: v } %></dd>
+<%
+    label = ""
+  end
+end
+%>
+</dl>

@@ -1,15 +1,9 @@
-# encoding: UTF-8
-require 'rubygems'
-require 'rails'
-begin
-  require 'bundler/setup'
-rescue LoadError
-  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
-end
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
-Bundler::GemHelper.install_tasks
+require File.expand_path('../config/application', __FILE__)
 
-load "tasks/blacklight.rake"
-load "lib/railties/blacklight.rake"
+Blacklight::Application.load_tasks
 
-task :default => [:ci]
+ZIP_URL = "https://github.com/projectblacklight/blacklight-jetty/archive/v4.10.3.zip"
+require 'jettywrapper'

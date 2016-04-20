@@ -6,5 +6,12 @@
         </div>
         <span class="constraints-label"><%= t('blacklight.search.filters.title') %></span>
         <%= render_constraints(params) %>
+<%
+    fields = params[:f] || {}
+    doctype = fields[:doctype] || []
+    inst = fields[:inst_z] || []
+%>
+<% if doctype.include?('cres') %><!-- You are searching course reserves --><% end %>
+<% if inst.include?('whe') %><!-- You are searching Wheelock materials --><% end %>
       </div>
 <% end %>

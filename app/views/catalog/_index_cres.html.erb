@@ -1,0 +1,22 @@
+<!-- course: <%= document["course_display"] || 'nil' %> -->
+<%# default partial to display solr document fields in catalog index view -%>
+<dl class="document-metadata dl-horizontal dl-invert">
+  
+<%
+index_fields(document).each do |field_name, field|
+  if %w(title_display format).include? field_name
+    # Omit the format and title_display fields
+  elsif should_render_index_field? document, field
+    name, label = field_name.parameterize, render_index_field_label(document, field: field_name)
+    if label == 'Title:'
+      label = 'Course:'
+    end
+%>
+    <!-- name: <%= name %> -->
+    <!-- label: <%= label %> -->
+    <dt class="blacklight-<%= name %>"><%= label %></dt>
+    <dd class="blacklight-<%= name %>"><%= render_index_field_value document, field: field_name %></dd>
+    <% end -%>
+  <% end -%>
+
+</dl>

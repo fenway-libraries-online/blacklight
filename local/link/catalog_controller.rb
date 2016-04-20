@@ -1,0 +1,1 @@
+../../app/controllers/catalog_controller.rb

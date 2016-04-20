@@ -1,0 +1,43 @@
+<%#
+  Default partial to display holdings (online and in-library)
+
+  Locals:
+    * document
+    * holdings = { "onl" => [...], "lib" => [...] }
+%>
+<dl class="dl-horizontal dl-invert">
+<%
+labels = {
+  "onl" => render_document_show_field_label(document, field: "onl"),
+  "lib" => render_document_show_field_label(document, field: "lib"),
+}
+online_access = holdings["onl"]
+library_holdings = holdings["lib"]
+if online_access.empty? %>
+           <dt class="blacklight-onl"><%= labels["onl"] %></dt>
+           <dd class="blacklight-onl"><i>No online access</i></dd>
+<% else %>
+<%
+   label = labels["onl"]
+   online_access.each do |v|
+     url, linktext = v.split("|=|")
+%>
+           <dt class="blacklight-onl"><%= label %></dt>
+           <dd class="blacklight-onl"><a href="<%= url %>"><%= linktext %></a></dd>
+<%   label = ""
+   end %>
+<% end %>
+<% if library_holdings.empty? %>
+           <dt class="blacklight-lib"><%= labels["lib"] %></dt>
+           <dd class="blacklight-lib"><i>None available</i></dd>
+<% else %>
+<%
+   label = labels["lib"]
+   library_holdings.each do |v|
+     inst, loc, callno = v.split("|=|") %>
+           <dt class="blacklight-lib"><%= label %></dt>
+           <dd class="blacklight-lib"><b><%= loc %></b> <%= callno %></dd>
+<%   label = ""
+   end
+end %>
+</dl>

@@ -1,0 +1,26 @@
+<%#
+  Partial to render a single online "holdings record"
+-%>
+<%
+value = JSON.parse(value)
+links = value["links"] || []
+loc   = value["loc"]
+cnum  = value["cnum"]
+%>
+<%
+links.each.with_index do |l, i|
+  if i > 0
+%>
+    <br/>
+<%
+  end
+%>
+<% if loc %><b><%= render_location_value(loc) %></b><% end %>
+<% if cnum %><%= cnum %><% end %>
+<a href="<%= l['url'] %>"><%= l['label'] %></a>
+<%
+end
+%>
+
+<%# # vim:set ts=2 sw=2:
+%>

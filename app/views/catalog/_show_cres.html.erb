@@ -1,0 +1,77 @@
+<%# default partial to display solr document fields in catalog show view -%>
+<!-- <img src="/assets/cres.png"/> -->
+<dl class="dl-horizontal dl-invert">
+<!-- This is course reserve list <%= document["id"] %> -->
+<%
+items  = document["item_z"].collect{ |i| JSON.parse(i) }
+nitems = items ? items.size : 0
+eitems = items.select{ |i| !i["link"].nil? }
+bibs   = items.select{ |i|  i["link"].nil? }.group_by{ |x| x["bib_id"] }.values.map{ |x| x[0] }
+# The previous line groups items (as opposed to e-items) by bib ID, then winnows each group down
+# to a single item (the first, not that it matters).
+
+# First, show metadata (course, instructor, etc.)
+document_show_fields(document).each do |field_name, field|
+  if %w(format title_display).include? field_name
+    # Omit the format field
+  elsif should_render_show_field? document, field
+    name, label = field_name.parameterize, render_document_show_field_label(document, field: field_name)
+    if label == 'Title:'
+      label = 'Course:'
+    end
+-%>
+    <!-- name: <%= name %> -->
+    <!-- label: <%= label %> -->
+    <dt class="blacklight-<%= name %>"><%= label %></dt>
+    <dd class="blacklight-<%= name %>"><%= render_document_show_field_value document, field: field_name %></dd>
+<%
+  end
+end
+%>
+</dl>
+<hr/>
+<%
+if bibs.size == 0 and eitems.size == 0
+%>
+<p>This reserves list is empty.</p>
+<%
+else
+%>
+<h3><img src="/assets/cres.png"/> Items</h3>
+<dl class="dl-horizontal dl-invert">
+<%
+  # List bibs
+  if bibs.size > 0
+%>
+    <dt class="blacklight-items">On reserve at a library:</dt>
+    <dd class="blacklight-items">
+<%
+    bibs.sort{ |x, y| x["title"].downcase <=> y["title"].downcase }.each do |b|
+%>
+      <p style="padding-left: 2em; text-indent: -2em; margin-bottom: 0"><a href="/catalog/b<%= b["bib_id"] %>"><%= b["title"] %></a></p>
+<%
+    end
+%>
+    </dd>
+<%
+  end
+  # And finally e-items
+  if eitems.size > 0
+%>
+    <dt class="blacklight-items">Available online:</dt>
+    <dd class="blacklight-items">
+<%
+    eitems.sort{ |x, y| x["title"].downcase <=> y["title"].downcase }.each do |e|
+      title, link = e["title"], e["link"]
+      url, label = link["url"], link["label"]
+%>
+      <p style="padding-left: 2em; text-indent: -2em; margin-bottom: 0"><%= title %><br /><a href="<%= url %>"><%= label %></a></p>
+<%
+    end
+%>
+    </dd>
+<%
+  end
+end
+%>
+</dl>

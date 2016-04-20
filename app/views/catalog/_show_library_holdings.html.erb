@@ -1,0 +1,55 @@
+<%#
+  Partial to render a single online "holdings record"
+-%>
+<%
+value = JSON.parse(value)
+loc   = value["loc"]
+cnum  = value["cnum"]
+avail = value["avail_s"] || 'unknown'
+items = value["items"]
+%>
+<%
+case avail
+  when 'all'  %><img width="12" height="12" src="/images/available.png"/><%
+  when 'some' %><img width="12" height="12" src="/images/some_available.png"/><%
+  when 'none' %><img width="12" height="12" src="/images/unavailable.png"/><%
+  else        %><img width="12" height="12" src="/images/unknown.png"/><%
+end
+%>
+<!-- available: <%= avail %> -->
+<% if loc %><b><%= render_location_value(loc) %></b><% end %>
+<% if cnum %><%= cnum %><% end %>
+<%
+case avail
+  when 'all'  %><i>Available</i><%
+  when 'some' %><i>Available in part</i><%
+  when 'none' %><i>Unavailable</i><%
+  else        %><i>Availability unknown</i><%
+end
+items.each do |item|
+  tloc = item["temp_loc"]
+  stat = item["status"]
+  cres = item["reserves"]
+  if tloc and tloc != loc %>
+<br/><span style="margin-left: 2em"><img width="12" height="12" src="/images/temploc.png"/>Temporarily at <b><%= render_location_value(tloc) %></b></span>
+<%
+  end
+  if stat and stat != 1
+%>
+<br/><span class="item-status" style="margin-left: 2em"><%= render_item_status(item) %></span>
+<%
+  end
+  if cres and cres.size
+    cres.uniq.each do |c|
+      if !c['title'].nil?
+%>
+        <br/><span style="padding-left: 2em">On reserve for</span> <a href="/catalog/<%= c['id'] %>"><%= c['title'] %></a> 
+<%
+      end
+    end
+  end
+end
+%>
+
+<%# # vim:set ts=2 sw=2:
+%>

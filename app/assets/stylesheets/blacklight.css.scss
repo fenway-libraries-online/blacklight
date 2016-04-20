@@ -1,0 +1,13 @@
+@import 'bootstrap-sprockets';
+
+@import 'bootstrap';
+
+@import 'blacklight/blacklight';
+
+.blacklight-cres > h1:before {
+    content:url(image-url("cres.png"));
+}
+
+#document.blacklight-cres:before {
+    content:url(image-url("cres.png"));
+}

@@ -1,0 +1,27 @@
+<%# default partial to display flowers in catalog show view -%>
+<%
+name = document["title_display"]
+holdings = {
+  "onl" => [],
+  "lib" => [],
+}
+-%>
+<p>
+<img caption="Wikipedia" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/PaeoniaSuffruticosa7.jpg/640px-PaeoniaSuffruticosa7.jpg"/>
+</p>
+<dl class="dl-horizontal dl-invert">
+<%
+document_show_fields(document).each do |field_name, field|
+  if should_render_show_field? document, field
+    if field_name == "onl" || field_name == "lib"
+      holdings[field_name] = document[field_name]
+    else
+    -%>
+      <dt class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_label document, field: field_name %></dt>
+      <dd class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_value document, field: field_name %></dd>
+<%  end
+  end
+end %>
+</dl>
+<hr/>
+<%= render partial: "show_holdings", locals: {document: document, holdings: holdings} %>

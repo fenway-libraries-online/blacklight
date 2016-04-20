@@ -1,13 +1,65 @@
-# frozen_string_literal: true
-Blacklight::Engine.routes.draw do
-  get "search_history",             :to => "search_history#index",   :as => "search_history"
-  delete "search_history/clear",       :to => "search_history#clear",   :as => "clear_search_history"
-  delete "saved_searches/clear",       :to => "saved_searches#clear",   :as => "clear_saved_searches"
-  get "saved_searches",       :to => "saved_searches#index",   :as => "saved_searches"
-  put "saved_searches/save/:id",    :to => "saved_searches#save",    :as => "save_search"
-  delete "saved_searches/forget/:id",  :to => "saved_searches#forget",  :as => "forget_search"
-  post "saved_searches/forget/:id",  :to => "saved_searches#forget"
-  post "/catalog/:id/track", to: 'catalog#track', as: 'track_search_context'
+Blacklight::Application.routes.draw do
 
-  resources :suggest, only: :index, defaults: { format: 'json' }
+  Blacklight::Marc.add_routes(self)
+  root to: "catalog#index"
+  blacklight_for :catalog
+  devise_for :users
+
+  get 'reserves', to: redirect('/?q=&f[doctype][]=cres')
+  get 'reserves/:inst', to: redirect('/?q=&f[doctype][]=cres&f[inst_z][]=%{inst}')
+
+  # get 'reserves' => '/reserves.html'
+  # get 'reserves/:id' => 'catalog#purchase', as: :purchase
+
+  # You can have the root of your site routed with "root"
+  # root 'welcome#index'
+
+  # Example of regular route:
+  #   get 'products/:id' => 'catalog#view'
+
+  # Example of named route that can be invoked with purchase_url(id: product.id)
+  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+
+  # Example resource route (maps HTTP verbs to controller actions automatically):
+  #   resources :products
+
+  # Example resource route with options:
+  #   resources :products do
+  #     member do
+  #       get 'short'
+  #       post 'toggle'
+  #     end
+  #
+  #     collection do
+  #       get 'sold'
+  #     end
+  #   end
+
+  # Example resource route with sub-resources:
+  #   resources :products do
+  #     resources :comments, :sales
+  #     resource :seller
+  #   end
+
+  # Example resource route with more complex sub-resources:
+  #   resources :products do
+  #     resources :comments
+  #     resources :sales do
+  #       get 'recent', on: :collection
+  #     end
+  #   end
+
+  # Example resource route with concerns:
+  #   concern :toggleable do
+  #     post 'toggle'
+  #   end
+  #   resources :posts, concerns: :toggleable
+  #   resources :photos, concerns: :toggleable
+
+  # Example resource route within a namespace:
+  #   namespace :admin do
+  #     # Directs /admin/products/* to Admin::ProductsController
+  #     # (app/controllers/admin/products_controller.rb)
+  #     resources :products
+  #   end
 end

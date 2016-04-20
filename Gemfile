@@ -1,47 +1,61 @@
 source 'https://rubygems.org'
 
-# Please see blacklight.gemspec for dependency information.
-gemspec path: File.expand_path('..', __FILE__)
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '4.1.14'
 
-gem 'simplecov', '~> 0.10', require: false
-gem 'coveralls', require: false
+# Use sqlite3 as the database for Active Record
+gem 'sqlite3'
 
-group :test do
-  gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
+# Use SCSS for stylesheets
+gem 'sass-rails', '>= 5.0'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 4.0.0'
+
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+# gem 'therubyracer', platforms: :ruby
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem 'turbolinks'
+
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 1.2'
+
+group :doc do
+  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'sdoc', require: false
 end
 
-# BEGIN ENGINE_CART BLOCK
-# engine_cart: 0.8.0
-# engine_cart stanza: 0.8.0
-# the below comes from engine_cart, a gem used to test this Rails engine gem in the context of a Rails app.
-file = File.expand_path("Gemfile", ENV['ENGINE_CART_DESTINATION'] || ENV['RAILS_ROOT'] || File.expand_path(".internal_test_app", File.dirname(__FILE__)))
-if File.exist?(file)
-  begin
-    eval_gemfile file
-  rescue Bundler::GemfileError => e
-    Bundler.ui.warn '[EngineCart] Skipping Rails application dependencies:'
-    Bundler.ui.warn e.message
-  end
-else
-  Bundler.ui.warn "[EngineCart] Unable to find test application dependencies in #{file}, using placeholder dependencies"
+# Use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~> 3.1.2'
 
-  if ENV['RAILS_VERSION']
-    if ENV['RAILS_VERSION'] == 'edge'
-      gem 'rails', github: 'rails/rails'
-      ENV['ENGINE_CART_RAILS_OPTIONS']= "--edge --skip-turbolinks"
-    else
-      gem 'rails', ENV['RAILS_VERSION']
-    end
-  end
+# Use unicorn as the app server
+# gem 'unicorn'
 
-  if ENV['RAILS_VERSION'].nil? || ENV['RAILS_VERSION'] =~ /^4\.2/
-    gem 'responders', "~> 2.0"
-    gem 'sass-rails', ">= 5.0"
-  elsif ENV['RAILS_VERSION'] =~ /^5\.0/ || ENV['RAILS_VERSION'] == 'edge'
-    # nop
-  else
-    gem 'bootstrap-sass', '< 3.3.5' # 3.3.5 requires sass 3.3, incompatible with sass-rails 4.x
-    gem 'sass-rails', "< 5.0"
-  end
+# Use Capistrano for deployment
+# gem 'capistrano', group: :development
+
+# Use debugger
+# gem 'debugger', group: [:development, :test]
+
+gem "blacklight", ">= 5.3.0"
+gem "jettywrapper", ">= 2.0"
+gem 'therubyracer'
+
+gem "rsolr", "~> 1.0.6"
+gem "devise"
+gem "devise-guests", "~> 0.3"
+gem "blacklight-marc", "~> 5.0"
+
+gem "haml"
+gem "haml-rails"
+
+group :development, :test do
+    gem 'byebug'
 end
-# END ENGINE_CART BLOCK
